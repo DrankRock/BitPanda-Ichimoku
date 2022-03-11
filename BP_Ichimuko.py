@@ -63,6 +63,7 @@ def allKumo(inputFile, mode):
 			for mode in ["day", "week", "month", "year"]:
 				dictionnaries[mode][line] = BIP.getData(line, mode)
 			iterator+=1
+		print("-- [number] -- Ticker -- Kumo value -- RSI value")
 		for mode in ["day", "week", "month", "year"]:
 			print("[info]  Top {} in {} mode :".format(nTop, mode))
 			newDictionnaries[mode] = {k: v for k, v in sorted(dictionnaries[mode].items(), key=lambda item: item[1],reverse=True)}
@@ -80,6 +81,7 @@ def allKumo(inputFile, mode):
 			iterator+=1
 
 		newDict = {k: v for k, v in sorted(dictGeneral.items(), key=lambda item: item[1],reverse=True)}
+		print("-- [number] -- Ticker -- Kumo value -- RSI value")
 		print("[info]  Top {} in {} mode :".format(nTop,mode))
 		dictPrintTop(newDict, 10)
 
