@@ -35,10 +35,10 @@ def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, 
 def dictPrintTop(dictInput, n):
 	if bool(dictInput):
 		iterator = 1
-		if n >= len(dictInput):
+		if n <= len(dictInput):
 			n = len(dictInput)
 		for key, value in dictInput.items():
-			print(" -- [{}] - {} = {}".format(iterator, key, value))
+			print(" -- [{}] -- {} = {} -- {}".format(iterator, key, value[0], value[1]))
 			iterator+=1
 
 def allKumo(inputFile, mode):
@@ -75,7 +75,8 @@ def allKumo(inputFile, mode):
 		print("Calculating Kumos for each ticker in file with mode {}..".format(inputFile, mode))
 		for line in lines:
 			printProgressBar(iterator, length, prefix = 'Progress:', suffix = 'Complete', length = 50)
-			dictGeneral[line] = BIP.getData(line, mode)
+			kumo, rsi = BIP.getData(line, mode)
+			dictGeneral[line] = [kumo, rsi]
 			iterator+=1
 
 		newDict = {k: v for k, v in sorted(dictGeneral.items(), key=lambda item: item[1],reverse=True)}

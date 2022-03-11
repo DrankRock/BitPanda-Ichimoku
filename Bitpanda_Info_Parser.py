@@ -30,8 +30,9 @@ def getData(entry, mode):
 	previous_close_value = -1
 	U = []
 	D = []
-	nU = 0
-	nD = 0
+	sumU = 0
+	sumD = 0
+	number_of_periods = 0
 	if number_of_data <= 14:
 		RSI_periods = number_of_data-1
 	else:
@@ -74,19 +75,21 @@ def getData(entry, mode):
 
 		## Relative Strength Index
 		if iterator> RSI_start:
-			differenceValue = closeData - previous_closed_data
+			number_of_periods+=1
+			differenceValue = closeData - previous_close_value
 			if differenceValue > 0:
-				U.append(differenceValue)
-				D.append(0)
+				uValue = differenceValue
+				dValue = 0
 			elif differenceValue < 0:
-				U.append(0)
-				D.append(abs(differenceValue))
+				uValue = 0
+				dValue = abs(differenceValue)
 			else:
-				U.append(0)
-				D.append(0)
-			if closeData > previous_close_value:
-			elif closeData < previous_close_value:
-			else:
+				uValue = 0
+				dValue = 0
+			U.append(uValue)
+			D.append(dValue)
+			sumU += uValue
+			sumD += dValue
 
 		## Ichikumo
 		if iterator > kijun_value:
@@ -111,6 +114,33 @@ def getData(entry, mode):
 		iterator+=1
 		previous_close_value = closeData
 
+	## RSI Calculating
+	# From https://www.macroption.com/rsi-calculation/
+	numValues = len(U)
+	smoothing_factor = 1/numValues
+	currentAverageU = 0
+	currentAverageD = 0
+	previousAverageU = sumU/numValues
+	previousAverageD = sumD/numValues
+	for i in range(0, numValues-1):
+		currentAverageD = smoothing_factor*D[i]+(1-smoothing_factor)*previousAverageD
+		currentAverageU = smoothing_factor*U[i]+(1-smoothing_factor)*previousAverageU
+		previousAverageU = currentAverageU
+		previousAverageD = currentAverageD
+	relative_strength = previousAverageU/previousAverageD
+	RSI = 100 - (100 / (1+relative_strength))
+	if RSI>=70:
+		RSI = "{} (overbought)".format(RSI)
+	elif RSI<=30:
+		RSI = "{} (oversold)".format(RSI)
+
+
+
+		
+
+
+
+	## Kumo Calculating
 	tenkan_sen = (tenkan_min+tenkan_max)/2
 	kijun_sen = (kijun_min+kijun_max)/2
 	senkou_span_A = (tenkan_sen+kijun_sen)/2
@@ -118,7 +148,7 @@ def getData(entry, mode):
 	Kumo = senkou_span_A-senkou_span_B
 	#print("Senkou Span A = {} ; Senkou Span B = {} ; Komu = {} \nnumber of Tenkan = {} ; number of Kijun = {} ; number of values = {}".format(senkou_span_A,senkou_span_B,Kumo,number_of_tenkan,number_of_kijun, number_of_data))
 
-	return Kumo
+	return Kumo, RSI
 
 
 def main(argv):
