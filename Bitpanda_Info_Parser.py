@@ -23,17 +23,34 @@ def getData(entry, mode):
 	responseJson = requests.get(url).json()
 	jsonData = json.loads(json.dumps(responseJson))
 	iterator = 1
-	# ----
+	number_of_data = len(jsonData['data'][entry])
+
+	# ---- RSI
+	# Arbitrary choice of a 14 periods value
+	previous_close_value = -1
+	U = []
+	D = []
+	nU = 0
+	nD = 0
+	if number_of_data <= 14:
+		RSI_periods = number_of_data-1
+	else:
+		RSI_periods = 14
+	RSI_start = number_of_data - RSI_periods		
+
+	# ---- Tenkan
 	tenkan_max = -1
 	tenkan_min = 9999999999
-	# ----
+
+	# ---- Senkou
 	senkou_max = -1
 	senkou_min = 9999999999
-	# ----
+
+	# ---- Kijun
 	kijun_max = -1
 	kijun_min = 9999999999
+
 	# ----
-	number_of_data = len(jsonData['data'][entry])
 	if number_of_data < 60:
 		senkou_value = 0
 		kijun_value = number_of_data/2
@@ -55,6 +72,23 @@ def getData(entry, mode):
 		#print(closeData,", ",dateData)
 		closeData = float(closeData)
 
+		## Relative Strength Index
+		if iterator> RSI_start:
+			differenceValue = closeData - previous_closed_data
+			if differenceValue > 0:
+				U.append(differenceValue)
+				D.append(0)
+			elif differenceValue < 0:
+				U.append(0)
+				D.append(abs(differenceValue))
+			else:
+				U.append(0)
+				D.append(0)
+			if closeData > previous_close_value:
+			elif closeData < previous_close_value:
+			else:
+
+		## Ichikumo
 		if iterator > kijun_value:
 			number_of_kijun+=1
 			if closeData > kijun_max:
@@ -75,6 +109,7 @@ def getData(entry, mode):
 				senkou_min = closeData
 		
 		iterator+=1
+		previous_close_value = closeData
 
 	tenkan_sen = (tenkan_min+tenkan_max)/2
 	kijun_sen = (kijun_min+kijun_max)/2
