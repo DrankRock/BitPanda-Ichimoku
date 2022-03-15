@@ -35,17 +35,19 @@ def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, 
 def dictPrintTop(dictInput, n):
 	if bool(dictInput):
 		iterator = 1
-		if n <= len(dictInput):
+		if n >= len(dictInput):
 			n = len(dictInput)
 		for key, value in dictInput.items():
+			if iterator >= n :
+				return
 			print(" -- [{}] -- {} = {} -- {}".format(iterator, key, value[0], value[1]))
 			iterator+=1
 
-def allKumo(inputFile, mode):
+def allKumo(inputFile, mode, number):
 	# TODO : Multithreading
 	# TODO : Use Auto Proxy Rotator
 	print("Starting BitPanda Kumo Calculator with input <{}> and mode <{}>...".format(inputFile,mode))
-	nTop = 10
+	nTop = number
 	with open(inputFile, 'r') as ticker_list:
 		lines = ticker_list.read().splitlines()
 		print("Number of tickers to check : {}".format(len(lines)))
@@ -83,16 +85,17 @@ def allKumo(inputFile, mode):
 		newDict = {k: v for k, v in sorted(dictGeneral.items(), key=lambda item: item[1],reverse=True)}
 		print("-- [number] -- Ticker -- Kumo value -- RSI value")
 		print("[info]  Top {} in {} mode :".format(nTop,mode))
-		dictPrintTop(newDict, 10)
+		dictPrintTop(newDict, nTop)
 
 
 def argument_selection(argv):
 	# Credit : https://www.tutorialspoint.com/python/python_command_line_arguments.htm
 	inputFile = 'BitPanda_All_Ticker.txt'
 	mode = 'month'
+	number = 10
 
 	try:
-		opts, args = getopt.getopt(argv,"hi:m:",["help","input=","mode="])
+		opts, args = getopt.getopt(argv,"hi:m:n:",["help","input=","mode=","number="])
 	except getopt.GetoptError:
 		print('Usage : BP_Ichimuko.py -i <input>')
 		sys.exit(2)
@@ -106,9 +109,11 @@ def argument_selection(argv):
 			inputFile = arg
 		elif opt in ("-m", "--mode"):
 			mode = arg
+		elif opt in ("-n", "--number"):
+			number = arg
 
 	if os.path.exists(inputFile):
-		allKumo(inputFile, mode)
+		allKumo(inputFile, mode, number)
 	else :
 		print('Error : no input given or non-existent file')
 		print('Usage : BP_Ichimuko.py -i <inputFile>')
