@@ -73,18 +73,16 @@ If not, the values are (total number/6) - (total number/2) - (total number)
 
 ## What next ?
 In the next updates, I'll add : 
--> Multi-threading
--> Proxies
--> Auto Proxies
--> RSI Index
--> single Ticker as Argument
--> Output file
--> Debug Mode
+-> Multi-threading  
+-> Proxies  
+-> Auto Proxies  
+-> RSI Index  
+-> single Ticker as Argument  
+-> Output file  
+-> Debug Mode  
 
 
 ## Contact
 For any feedback, improvement I could make, bug you found, or just to talk, you can contact me on [my Discord server]().
 
 
-
-multi-threading, the possibility to use proxies, I'll add another projects of mine to find proxies online, check them, use them, for a completely automatic proxy rotating use, I'll also add the RSI index to the results, to add strength to any conclusion.
